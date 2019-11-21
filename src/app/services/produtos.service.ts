@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { Produto } from "src/app/models/produto";
 import { MainService } from "./main.service";
+import { debug } from 'util';
 
 @Injectable({
   providedIn: 'root'
@@ -27,23 +28,24 @@ export class ProdutosService {
   }
 
   createProduto(produto) {
+    debugger;
     return this.call.createGeneric(this.service, produto);
   }
 
-
   updateProduto(id: number, produto: Produto) {
-    produto.codigo = 0;
     if (id > 0)
       return this.call.updateGeneric(this.service, id, produto);
-
-
+      
     return null;
   }
 
-  inativarProduto(id: number, produto: Produto) {
-    produto.codigo = 0;
+  getNomeEstoque(id: number) {
+    return this.http.get(environment.apiBaseURL + this.service + '/Estoque' + '/' + id);
+  }
+
+  inativarProduto(id: number) {
     if (id > 0)
-      return this.call.updateGeneric(this.service, id, produto);
+      return this.call.deleteGeneric(this.service, id);
   }
 
 

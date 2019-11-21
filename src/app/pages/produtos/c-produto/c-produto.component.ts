@@ -9,8 +9,7 @@ import { DialogBoxComponent } from 'src/app/components/dialog-box/dialog-box.com
 import { ProdutosService } from 'src/app/services/produtos.service';
 import { DataSource } from '@angular/cdk/table';
 import { Fornecedor } from 'src/app/models/fornecedor';
-
-
+import { $ } from 'protractor';
 
 export interface UsersData {
   name: string;
@@ -18,7 +17,6 @@ export interface UsersData {
 }
 
 const ELEMENT_DATA: Produto[] = [
-  { codigo: 1560608769632, name: 'Macaquinho Transpassado', categoria: 'Moda Pop, Listrado com Alças', preco: 39.99 },
   { codigo: 1560608796014, name: 'Vestido Preto Transpassado', categoria: 'Moda Pop, Alça Dupla', preco: 39.99 },
   { codigo: 1560608787815, name: 'Vestido Bege', categoria: 'Moda Verão, Bonprix', preco: 79.99 },
   { codigo: 1560608805101, name: 'Vestido Decote Redondo', categoria: 'Moda Evangélica, Estampado, Rosalie', preco: 39.99 }
@@ -35,12 +33,11 @@ export class CProdutoComponent extends MasterEranca implements OnInit {
   fornecedor: Fornecedor;
   isFirstOpen = true;
 
-  // // Table
-  // displayedColumns: string[] = ['id', 'name', 'action'];
+  //Table
   dataSource = ELEMENT_DATA;
   bsConfig: Partial<BsDatepickerConfig>;
   displayedColumns: string[] = ['codigo', 'name', 'categoria', 'preco', 'action']; // Menus a serem apresentados //,  'dtFornecida'
-  //                               //*A order das colunas é a mesma do apresentada no array
+  //*A order das colunas é a mesma do apresentada no array
 
   @ViewChild(MatTable, { static: true }) table: MatTable<any>;
 
@@ -63,11 +60,16 @@ export class CProdutoComponent extends MasterEranca implements OnInit {
   }
 
   CarregaForm(valores: any[]) {
+    var i;
+    this.dataSource = [];
     this.dataSource.push(...valores);
+    
+    console.log('I: ' + i + '\n' + valores);
+
     this.table.renderRows();
   }
 
-  test() {
+  BuscarProdutoId() {
     console.log(this.produto.produtoId);
     if (this.produto) {
       if (this.produto.produtoId) {
@@ -75,6 +77,19 @@ export class CProdutoComponent extends MasterEranca implements OnInit {
           this.produtoService.getProdutoById(this.produto.produtoId).subscribe(res => this.carregarRetorno(res));
         }
       }
+    }
+  }
+
+  BuscarFornecedorId() {
+
+  }
+
+  BuscarEstoqueId() {
+    if (this.produto.idEstoque > 0) {
+      this.produtoService.getNomeEstoque(this.produto.idEstoque).subscribe((res: string) => {
+        if (res.length <= 0) alert('Não foi encontrado o estoque');
+        else this.produto.nomeEstoque = res;
+      });
     }
   }
 
@@ -90,12 +105,13 @@ export class CProdutoComponent extends MasterEranca implements OnInit {
   }
 
   salvar() {
+    debugger;
     console.log(this.produto);
     if (this.produto.name == null) {
       alert('Um ou mais campos não estão preenchidos');
     } else {
-      this.PrepararCadastro(this.produto, false);
-      this.dataSource.push(...[this.produto]);
+      this.PrepararCadastro(this.produto);
+      // this.dataSource.push(...[this.produto]);
       this.table.renderRows();
       alert(`Produto: ${this.produto.name} foi salvo com sucesso`);
     }
@@ -103,6 +119,12 @@ export class CProdutoComponent extends MasterEranca implements OnInit {
 
   openDialog(action, obj) {
     obj.action = action;
+    this.produto = obj;
+    if (action == 'Update') {
+      this.produto.produtoId = obj.produtoId;
+      this.BuscarProdutoId();
+    }
+
     const dialogRef = this.dialog.open(DialogBoxComponent, {
       width: '300px',
       data: obj
@@ -120,6 +142,7 @@ export class CProdutoComponent extends MasterEranca implements OnInit {
   }
 
   addRowData(row_obj: UsersData) {
+    debugger;
     var d = new Date();
     // row_obj.dtFornecida = d;
     this.dataSource.push(row_obj);
@@ -127,37 +150,41 @@ export class CProdutoComponent extends MasterEranca implements OnInit {
   }
 
   updateRowData(row_obj: Produto) {
+    debugger;
     let d = new Date();
+    this.produto.produtoId = row_obj.produtoId;
+
     this.dataSource = this.dataSource.filter((value, key) => {
-      if (value.produtoId == row_obj.produtoId && value.codigo == row_obj.codigo) {
-        console.log(key);
+      if (value.codigo == row_obj.codigo) {
         value = {
-          produtoId: row_obj.produtoId,
+          // produtoId: row_obj.produtoId,
           name: row_obj.name,
           preco: row_obj.preco,
           categoria: row_obj.categoria,
           descricao: row_obj.descricao,
           dtFornecida: d,
-          fornecedorID: row_obj.fornecedorID,
-          idEstoque: row_obj.idEstoque,
-          nomeEstoque: row_obj.nomeEstoque,
-          qtdFornecida: row_obj.qtdFornecida,
-          qtdProduto: row_obj.qtdProduto,
-          vendedorID: row_obj.vendedorID,
+          // fornecedorID: row_obj.fornecedorID,
+          // idEstoque: row_obj.idEstoque,
+          // nomeEstoque: row_obj.nomeEstoque,
+          // qtdFornecida: row_obj.qtdFornecida,
+          // qtdProduto: row_obj.qtdProduto,
+          // vendedorID: row_obj.vendedorID,
         }
-
-        return true;
       }
-
-      return false
+      return true;
     });
+    this.table.renderRows();
   }
 
   deleteRowData(row_obj) {
-    this.dataSource = this.dataSource.filter((value, key) => {
-      return value.produtoId != row_obj.produtoId;
-    });
-    this.table.renderRows();
+    if (row_obj.produtoId > 0) {
+      this.produtoService.inativarProduto(row_obj.produtoId).subscribe(res => console.log(res));
+      this.dataSource = this.dataSource.filter((value, key) => {
+        return value.produtoId != row_obj.produtoId;
+      });
+
+      this.table.renderRows();
+    }
   }
 
   public limparProduto() {
@@ -197,9 +224,11 @@ export class CProdutoComponent extends MasterEranca implements OnInit {
     }
   }
 
-  public PrepararCadastro(item: Produto, delet?: any) {
+  public PrepararCadastro(item: Produto) {
+    debugger;
     let p: any = {};
     let d = new Date();
+    let existe: boolean = false;
 
     (item.categoria == null) ? item.categoria = '' : item.categoria = item.categoria;
     (item.descricao == null) ? item.descricao = '' : item.descricao = item.descricao;
@@ -213,60 +242,59 @@ export class CProdutoComponent extends MasterEranca implements OnInit {
     (item.qtdProduto == null) ? item.qtdProduto = 0 : item.qtdProduto = item.qtdProduto;
     (item.vendedorID == null) ? item.vendedorID = 0 : item.vendedorID = item.vendedorID;
 
-    if (item.produtoId > 0 && !delet) {
-      p = {
-        "produtoId": item.produtoId,
-        "codigo": item.codigo,
-        "name": item.name,
-        "descricao": item.descricao,
-        "categoria": item.categoria,
-        "preco": item.preco,
-        "qtdProduto": item.qtdFornecida,
-        "idEstoque": item.idEstoque,
-        "nomeEstoque": item.nomeEstoque,
-        "qtdFornecida": item.qtdFornecida,
-        "dtFornecida": item.dtFornecida,
-        "vendedorID": item.vendedorID,
-        "fornecedorID": item.fornecedorID
-      }
+    p = {
+      "codigo": item.codigo,
+      "name": item.name,
+      "descricao": item.descricao,
+      "categoria": item.categoria,
+      "preco": item.preco,
+      "qtdProduto": item.qtdFornecida,
+      "idEstoque": item.idEstoque,
+      "nomeEstoque": item.nomeEstoque,
+      "qtdFornecida": item.qtdFornecida,
+      "dtFornecida": item.dtFornecida,
+      "vendedorID": item.vendedorID,
+      "fornecedorID": item.fornecedorID
+    }
 
-      this.produtoService.updateProduto(item.produtoId, item);
-    } else if (delet) {
+    if (item.produtoId > 0) {
+      debugger;
+      this.produtoService.getProdutoById(item.produtoId).subscribe(
+        (res: any) => {
+          if (res) {
+            if (res.produtoId) {
+              p.produtoId = res.produtoId;
+              this.produtoService.updateProduto(p.produtoId, p).subscribe((res: any) => {
+                if (p)
+                  this.dataSource = this.dataSource.filter((value, key) => {
+                    if (value.codigo == p.codigo) {
+                      value = {
+                        produtoId: p.produtoId,
+                        name: p.name,
+                        preco: p.preco,
+                        categoria: p.categoria,
+                        descricao: p.descricao,
+                        dtFornecida: d,
+                        fornecedorID: p.fornecedorID,
+                        idEstoque: p.idEstoque,
+                        nomeEstoque: p.nomeEstoque,
+                        qtdFornecida: p.qtdFornecida,
+                        qtdProduto: p.qtdProduto,
+                        vendedorID: p.vendedorID,
+                      }
+                    }
+                    return true;
+                  });
 
-      p = {
-        "codigo": item.codigo,
-        "name": item.name,
-        "descricao": item.descricao,
-        "categoria": item.categoria,
-        "preco": item.preco,
-        "qtdProduto": item.qtdFornecida,
-        "idEstoque": item.idEstoque,
-        "nomeEstoque": item.nomeEstoque,
-        "qtdFornecida": item.qtdFornecida,
-        "dtFornecida": item.dtFornecida,
-        "vendedorID": item.vendedorID,
-        "fornecedorID": item.fornecedorID
-      }
-
-      this.produtoService.updateProduto(item.produtoId, item);
+                this.produtoService.getProdutos().subscribe(res => this.CarregaForm(res as any));
+              });
+            }
+          } else {
+            this.produtoService.createProduto(p).subscribe(res => console.log(res));
+          }
+        });
     } else {
-
-      p = {
-        "codigo": item.codigo,
-        "name": item.name,
-        "descricao": item.descricao,
-        "preco": item.preco,
-        "qtdProduto": item.qtdFornecida,
-        "idEstoque": item.idEstoque,
-        "nomeEstoque": item.nomeEstoque,
-        "qtdFornecida": item.qtdFornecida,
-        "vendedorID": item.vendedorID,
-        "dtFornecida": item.dtFornecida,
-        "categoria": item.categoria,
-        "fornecedorID": item.fornecedorID
-      }
-
-      if (!delet) this.produtoService.createProduto(p).subscribe(res => console.log(res));
+      this.produtoService.createProduto(p).subscribe(res => console.log(res));
     }
   }
 }

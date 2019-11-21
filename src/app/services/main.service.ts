@@ -43,6 +43,14 @@ export class MainService {
     }
   }
 
+  deleteGeneric(service, id) {
+    try {
+      return this.http.delete(this.url + service + '/' + id);
+    } catch (error) {
+      this.LogarErro(`(Delete ${service})`, `Campo ID do ${service} não encontrado`);
+    }
+  }
+
   LogarErro(comando: string, erro: any) {
     alert(`Erro ao tentar executar o comando ${comando}; Erro: ${erro}`);
   }
