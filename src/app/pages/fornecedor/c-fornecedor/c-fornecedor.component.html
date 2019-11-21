@@ -1,0 +1,220 @@
+<accordion [isAnimated]="true">
+    <accordion-group [isOpen]="isFirstOpen">
+      <button class="btn btn-link btn-block clearfix" accordion-heading type="button">
+        <div class="pull-left float-left header">Cadastrar Produto</div>
+      </button>
+  
+      <form (ngSubmit)="onSubmit()" [formGroup]="myForm">
+        <!-- Produto -->
+        <div class="row m-2 my-3">
+          <div class="col-2 ">
+            <mat-form-field class="full" appearance="outline">
+              <mat-label>ID</mat-label>
+              <input matInput onkeypress='return event.charCode >= 48 && event.charCode <= 57' placeholder="1..."
+                formControlName="produtoId" [(ngModel)]="produto.produtoId">
+              <mat-icon matSuffix>vpn_key</mat-icon>
+              <mat-hint>*Digite o numero do cadastro do produto</mat-hint>
+            </mat-form-field>
+          </div>
+          <div class="col-3">
+            <mat-form-field class="full" appearance="outline">
+              <mat-label>Codigo</mat-label>
+              <input matInput onkeypress='return event.charCode >= 48 && event.charCode <= 57' placeholder="João..."
+                formControlName="codigo" [(ngModel)]="produto.codigo">
+              <mat-icon matSuffix>lock</mat-icon>
+              <mat-hint>*Código do produto(ÚNICO)</mat-hint>
+            </mat-form-field>
+          </div>
+          <div class="col-7">
+            <mat-form-field class="full" appearance="outline">
+              <mat-label>Nome do Produto</mat-label>
+              <input matInput placeholder="Blusa..." formControlName="name" [(ngModel)]="produto.name">
+              <mat-icon matSuffix>sort_by_alpha</mat-icon>
+              <mat-hint></mat-hint>
+            </mat-form-field>
+          </div>
+        </div>
+  
+        <div class="row mx-2 ">
+          <div class="col-3">
+            <mat-form-field class="full" appearance="outline">
+              <mat-label>Descricao</mat-label>
+              <input matInput placeholder="Blusa preta..." formControlName="descricao" [(ngModel)]="produto.descricao">
+              <mat-icon matSuffix>comment</mat-icon>
+              <mat-hint>*Algo que se destaca no produto</mat-hint>
+            </mat-form-field>
+          </div>
+          <div class="col-6">
+            <mat-form-field class="full" appearance="outline">
+              <mat-label>Categorias</mat-label>
+              <input matInput placeholder="Feminina,Verão..." formControlName="categoria" [(ngModel)]="produto.categoria">
+              <mat-icon matSuffix>dynamic_feed</mat-icon>
+              <mat-hint>*Dígite as categorias separadas por (",")</mat-hint>
+            </mat-form-field>
+          </div>
+  
+          <div class="col-3">
+            <mat-form-field class="full" appearance="outline">
+              <mat-label>Preço</mat-label>
+              <input matInput onkeypress='return event.charCode >= 48 && event.charCode <= 57' placeholder="R$500,3..."
+                formControlName="preco" [(ngModel)]="produto.preco">
+              <mat-icon matSuffix>attach_money</mat-icon>
+              <mat-hint>*Não é necessário ponto ou vírgula</mat-hint>
+            </mat-form-field>
+          </div>
+        </div>
+  
+        <!--Estoque-->
+        <div class="row mx-2">
+          <div class="col-2">
+            <mat-form-field class="full" appearance="outline">
+              <mat-label>ID Estoque</mat-label>
+              <input matInput onkeypress='return event.charCode >= 48 && event.charCode <= 57' placeholder="1..."
+                formControlName="idEstoque" [(ngModel)]="produto.idEstoque">
+              <mat-icon matSuffix>vpn_key</mat-icon>
+              <mat-hint>*Número do cadastro do estoque</mat-hint>
+            </mat-form-field>
+          </div>
+  
+          <div class="col-6">
+            <mat-form-field class="full" appearance="outline">
+              <mat-label>Estoque</mat-label>
+              <input matInput placeholder="Estoque SP..(AV. CARDOSO, 3..)..." formControlName="nomeEstoque" [(ngModel)]="produto.nomeEstoque">
+              <mat-icon matSuffix>local_shipping</mat-icon>
+              <mat-hint>*Quando buscado por id é preenchido automaticamente</mat-hint>
+            </mat-form-field>
+          </div>
+  
+          <div class="col-2">
+            <mat-form-field class="full" appearance="outline">
+              <mat-label>Qtd. mínima</mat-label>
+              <input matInput onkeypress='return event.charCode >= 48 && event.charCode <= 57' placeholder="1..."
+                formControlName="qtdProduto" [(ngModel)]="produto.qtdProduto">
+              <mat-icon matSuffix>hdr_strong</mat-icon>
+              <mat-hint>*Quando atingida esta qtde. em estoque é exibido um aviso.</mat-hint>
+            </mat-form-field>
+          </div>
+        </div>
+  
+        <!-- Fornecedor-->
+        <div class="row mx-2 my-5">
+          <!--DatePiker-->
+          <div class="col-2">
+            <mat-form-field class="full" appearance="outline">
+              <mat-label>Data fornecida</mat-label>
+              <input matInput id="txtDataFornecida" matInput
+                onkeypress='return event.charCode >= 48 && event.charCode <= 57' placeholder="1..." bsDatepicker
+                formControlName="dtFornecida" [(ngModel)]="produto.dtFornecida" [bsConfig]="bsConfig" placement="top">
+              <mat-icon matSuffix>blur_circular</mat-icon>
+              <mat-hint>*Data de entrada</mat-hint>
+            </mat-form-field>
+          </div>
+  
+          <div class="col-2">
+            <mat-form-field class="full" appearance="outline">
+              <mat-label>ID Fornecedor</mat-label>
+              <input matInput matInput onkeypress='return event.charCode >= 48 && event.charCode <= 57' placeholder="1..."
+                formControlName="fornecedorID" [(ngModel)]="produto.fornecedorID">
+              <mat-icon matSuffix>vpn_key</mat-icon>
+              <mat-hint>*Número de cadastro do fornecedor</mat-hint>
+            </mat-form-field>
+          </div>
+  
+          <div class="col-6">
+            <mat-form-field class="full" appearance="outline">
+              <mat-label>Fornecedor</mat-label>
+              <input matInput placeholder="AJAX Aliment..." formControlName="nomeFornecedor"> <!--[(ngModel)]="fornecedor.NomeFornecedor"-->
+              <mat-icon matSuffix>person_pin</mat-icon>
+              <mat-hint>*Quando buscado por id é preenchido automaticamente</mat-hint>
+            </mat-form-field>
+          </div>
+  
+          <div class="col-2">
+            <mat-form-field class="full" appearance="outline">
+              <mat-label>Quantidade fornecida</mat-label>
+              <input matInput matInput onkeypress='return event.charCode >= 48 && event.charCode <= 57' placeholder="1..."
+                formControlName="qtdFornecida" [(ngModel)]="produto.qtdFornecida">
+              <mat-icon matSuffix>blur_circular</mat-icon>
+              <mat-hint>*Quantidade de entrada</mat-hint>
+            </mat-form-field>
+          </div>
+        </div>
+  
+        <div class="row mx-2">
+          <div class="col-10">
+            <button type="submit" mat-button class="btn btn-primary btn-full" 
+              mat-flat-button color="primary">
+              <div class="pull-center float-center header header"> {{nomeButton}} </div>
+            </button>
+          </div>
+          <div class="col-2">
+  
+            <button mat-button class="btn btn-primary btn-full" (click)="limparProduto()" mat-flat-button color="primary">
+              
+              <div class="pull-center float-center header"><i class="material-icons">clear</i></div>
+              
+            </button>
+          </div>
+        </div>
+      </form>
+    </accordion-group>
+  
+    <accordion-group>
+      <button class="btn btn-link btn-block clearfix" accordion-heading type="button">
+        <div class="pull-left float-left header">Produtos Cadastrados</div>
+      </button>
+      <div class="row">
+        <div class="col-12">
+          <table mat-table [dataSource]="dataSource" #mytable class="my-table mat-elevation-z8">
+  
+            <!--- Note that these columns can be defined in any order.
+              The actual rendered columns are set as a property on the row definition" -->
+  
+            <!-- Codigo Column -->
+            <ng-container matColumnDef="codigo">
+              <th mat-header-cell *matHeaderCellDef> Codigo </th>
+              <td mat-cell *matCellDef="let element"> {{element.codigo}} </td>
+            </ng-container>
+  
+            <!-- Name Column -->
+            <ng-container matColumnDef="name">
+              <th mat-header-cell *matHeaderCellDef> Name </th>
+              <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+            </ng-container>
+  
+            <!-- Preço Column -->
+            <ng-container matColumnDef="preco">
+              <th mat-header-cell *matHeaderCellDef> Preco </th>
+              <td mat-cell *matCellDef="let element"> {{element.preco}} </td>
+            </ng-container>
+  
+            <!-- Categoria Column -->
+            <ng-container matColumnDef="categoria">
+              <th mat-header-cell *matHeaderCellDef> Categoria </th>
+              <td mat-cell *matCellDef="let element"> {{element.categoria}} </td>
+            </ng-container>
+  
+            <!-- Data Column -->
+            <ng-container matColumnDef="dtFornecida">
+              <th mat-header-cell *matHeaderCellDef> Data </th>
+              <td mat-cell *matCellDef="let element"> {{element.dtFornecida}} </td>
+            </ng-container>
+  
+            <!-- Action Column -->
+            <ng-container matColumnDef="action">
+              <th mat-header-cell *matHeaderCellDef> Action </th>
+              <td mat-cell *matCellDef="let element" class="action-link">
+                <a (click)="openDialog('Update',element)"><button mat-button><i
+                      class="material-icons">edit</i></button></a> |
+                <a (click)="openDialog('Delete',element)"><button mat-button><i
+                      class="material-icons">delete_sweep</i></button></a>
+              </td>
+            </ng-container>
+  
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+          </table>
+        </div>
+      </div>
+    </accordion-group>
+  </accordion>

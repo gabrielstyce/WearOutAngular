@@ -1,0 +1,38 @@
+.sidenav-container {
+  height: 100%;
+}
+
+.sidenav {
+  width: 200px;
+}
+
+.sidenav .mat-toolbar {
+  background: inherit;
+}
+
+.mat-toolbar.mat-primary {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+.example-icon {
+  padding: 0 30px;
+}
+
+.Side.nav.toggle.icon {
+  padding-left: 5%;
+}
+
+.example-spacer {
+  flex: 1 1 auto;
+}
+
+.material-icons {
+  font-size: 40px;
+  width: 40px;
+}
+
+.verification {
+  font-size: 15px;
+}
