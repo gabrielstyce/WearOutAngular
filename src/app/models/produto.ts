@@ -1,10 +1,10 @@
 export interface Produto {
     produtoId?: number;
-    codigo?: number;
-    name?: string;
+    codigo: number;
+    name: string;
     descricao?: string;
     categoria?: string;
-    preco?: number;
+    preco: number;
     qtdProduto?: number;
     idEstoque?: number;
     nomeEstoque?: string;
@@ -12,4 +12,5 @@ export interface Produto {
     dtFornecida?: Date;
     vendedorID?: number;
     fornecedorID?: number;
+    dataRetorno?: string;
 }

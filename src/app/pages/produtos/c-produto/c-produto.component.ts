@@ -1,20 +1,13 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MainNavComponent } from "src/app/pages/main-nav/main-nav.component";
 import { MasterEranca } from 'src/app/masterEranca';
-import { Produto } from "src/app/models/produto";
 import { BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
-import { FormGroup, FormControl } from '@angular/forms';
-import { MatDialog, MatTable, MatTableDataSource } from '@angular/material';
+import { MatDialog, MatTable } from '@angular/material';
 import { DialogBoxComponent } from 'src/app/components/dialog-box/dialog-box.component';
-import { ProdutosService } from 'src/app/services/produtos.service';
-import { DataSource } from '@angular/cdk/table';
+import { Produto } from "src/app/models/produto";
 import { Fornecedor } from 'src/app/models/fornecedor';
-import { $ } from 'protractor';
-
-export interface UsersData {
-  name: string;
-  id: number;
-}
+import { ProdutosService } from 'src/app/services/produtos.service';
+import { FornecedoresService } from "src/app/services/fornecedores.service";
 
 const ELEMENT_DATA: Produto[] = [
   { codigo: 1560608796014, name: 'Vestido Preto Transpassado', categoria: 'Moda Pop, Alça Dupla', preco: 39.99 },
@@ -36,7 +29,7 @@ export class CProdutoComponent extends MasterEranca implements OnInit {
   //Table
   dataSource = ELEMENT_DATA;
   bsConfig: Partial<BsDatepickerConfig>;
-  displayedColumns: string[] = ['codigo', 'name', 'categoria', 'preco', 'action']; // Menus a serem apresentados //,  'dtFornecida'
+  displayedColumns: string[] = ['codigo', 'name', 'categoria', 'preco', 'dtFornecida', 'action']; // Menus a serem apresentados //,  'dtFornecida'
   //*A order das colunas é a mesma do apresentada no array
 
   @ViewChild(MatTable, { static: true }) table: MatTable<any>;
@@ -44,6 +37,7 @@ export class CProdutoComponent extends MasterEranca implements OnInit {
   constructor(
     private dialog: MatDialog,
     private produtoService: ProdutosService,
+    private fornecedorService: FornecedoresService,
     private componenteMenu: MainNavComponent,
   ) {
     super();
@@ -52,7 +46,7 @@ export class CProdutoComponent extends MasterEranca implements OnInit {
 
   ngOnInit() {
     this.limparProduto();
-    this.componenteMenu.SetTitleTela("Cadastro de Produto");
+
     this.bsConfig = Object.assign({}, { containerClass: 'theme-dark-blue', isAnimated: true }); //Config do datePicker
 
     this.produtoService.getProdutos().subscribe(res => this.CarregaForm(res as any[])); // Pega todos os produtos do banco
@@ -60,12 +54,14 @@ export class CProdutoComponent extends MasterEranca implements OnInit {
   }
 
   CarregaForm(valores: any[]) {
-    var i;
     this.dataSource = [];
-    this.dataSource.push(...valores);
-    
-    console.log('I: ' + i + '\n' + valores);
 
+    valores.forEach(x => {
+      if (x.dtFornecida != undefined)
+        x.dataRetorno = this.GetDataString(x.dtFornecida);
+    });
+
+    this.dataSource.push(...valores);
     this.table.renderRows();
   }
 
@@ -74,21 +70,30 @@ export class CProdutoComponent extends MasterEranca implements OnInit {
     if (this.produto) {
       if (this.produto.produtoId) {
         if (this.produto.produtoId.toString().length > 0 && this.produto.produtoId > 0) {
-          this.produtoService.getProdutoById(this.produto.produtoId).subscribe(res => this.carregarRetorno(res));
+          this.produtoService.getProdutoById(this.produto.produtoId).subscribe(res => {
+            this.carregarRetorno(res);
+          });
         }
       }
     }
   }
 
   BuscarFornecedorId() {
-
+    debugger;
+    if (this.produto.fornecedorID > 0) {
+      this.fornecedorService.getFornecedorById(this.produto.fornecedorID).subscribe((res: any) => {
+        if (!res) alert('Fornecedor não encontrado');
+        else this.fornecedor.fullName = res.fullName;
+      });
+    }
   }
 
   BuscarEstoqueId() {
+    debugger;
     if (this.produto.idEstoque > 0) {
-      this.produtoService.getNomeEstoque(this.produto.idEstoque).subscribe((res: string) => {
-        if (res.length <= 0) alert('Não foi encontrado o estoque');
-        else this.produto.nomeEstoque = res;
+      this.produtoService.getNomeEstoque(this.produto.idEstoque).subscribe((res: any) => {
+        if (!res) alert('Estoque não encontrado');
+        else this.produto.nomeEstoque = res.nomeEstoque;
       });
     }
   }
@@ -97,11 +102,12 @@ export class CProdutoComponent extends MasterEranca implements OnInit {
     console.log(valor);
     if (valor) {
       this.produto = valor;
+      this.BuscarEstoqueId();
+      this.BuscarFornecedorId();
     } else {
       alert('Produto não encontrado.')
       this.limparProduto();
     }
-
   }
 
   salvar() {
@@ -118,62 +124,26 @@ export class CProdutoComponent extends MasterEranca implements OnInit {
   }
 
   openDialog(action, obj) {
+    debugger;
     obj.action = action;
     this.produto = obj;
     if (action == 'Update') {
       this.produto.produtoId = obj.produtoId;
       this.BuscarProdutoId();
-    }
+      this.gotoTop();
+    } else if (action == 'Delete') {
+      const dialogRef = this.dialog.open(DialogBoxComponent, {
+        width: '300px',
+        data: obj
+      });
 
-    const dialogRef = this.dialog.open(DialogBoxComponent, {
-      width: '300px',
-      data: obj
-    });
-
-    dialogRef.afterClosed().subscribe(result => {
-      if (result.event == 'Add') {
-        this.addRowData(result.data);
-      } else if (result.event == 'Update') {
-        this.updateRowData(result.data);
-      } else if (result.event == 'Delete') {
-        this.deleteRowData(result.data);
-      }
-    });
-  }
-
-  addRowData(row_obj: UsersData) {
-    debugger;
-    var d = new Date();
-    // row_obj.dtFornecida = d;
-    this.dataSource.push(row_obj);
-    this.table.renderRows();
-  }
-
-  updateRowData(row_obj: Produto) {
-    debugger;
-    let d = new Date();
-    this.produto.produtoId = row_obj.produtoId;
-
-    this.dataSource = this.dataSource.filter((value, key) => {
-      if (value.codigo == row_obj.codigo) {
-        value = {
-          // produtoId: row_obj.produtoId,
-          name: row_obj.name,
-          preco: row_obj.preco,
-          categoria: row_obj.categoria,
-          descricao: row_obj.descricao,
-          dtFornecida: d,
-          // fornecedorID: row_obj.fornecedorID,
-          // idEstoque: row_obj.idEstoque,
-          // nomeEstoque: row_obj.nomeEstoque,
-          // qtdFornecida: row_obj.qtdFornecida,
-          // qtdProduto: row_obj.qtdProduto,
-          // vendedorID: row_obj.vendedorID,
+      dialogRef.afterClosed().subscribe(result => {
+        if (result.event == 'Delete') {
+          this.deleteRowData(result.data);
+          this.limparProduto();
         }
-      }
-      return true;
-    });
-    this.table.renderRows();
+      });
+    }
   }
 
   deleteRowData(row_obj) {
@@ -224,11 +194,18 @@ export class CProdutoComponent extends MasterEranca implements OnInit {
     }
   }
 
+  gotoTop() {
+    window.scroll({
+      top: 0,
+      left: 0,
+      behavior: 'smooth'
+    });
+  }
+
   public PrepararCadastro(item: Produto) {
     debugger;
     let p: any = {};
     let d = new Date();
-    let existe: boolean = false;
 
     (item.categoria == null) ? item.categoria = '' : item.categoria = item.categoria;
     (item.descricao == null) ? item.descricao = '' : item.descricao = item.descricao;
@@ -248,7 +225,7 @@ export class CProdutoComponent extends MasterEranca implements OnInit {
       "descricao": item.descricao,
       "categoria": item.categoria,
       "preco": item.preco,
-      "qtdProduto": item.qtdFornecida,
+      "qtdProduto": item.qtdProduto,
       "idEstoque": item.idEstoque,
       "nomeEstoque": item.nomeEstoque,
       "qtdFornecida": item.qtdFornecida,
@@ -269,6 +246,7 @@ export class CProdutoComponent extends MasterEranca implements OnInit {
                   this.dataSource = this.dataSource.filter((value, key) => {
                     if (value.codigo == p.codigo) {
                       value = {
+                        codigo: value.codigo,
                         produtoId: p.produtoId,
                         name: p.name,
                         preco: p.preco,

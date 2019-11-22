@@ -10,8 +10,6 @@ import { debug } from 'util';
 })
 export class ProdutosService {
   service: string = '/Produtos';
-  entity: Produto;
-  listaEntity: Produto[];
 
   constructor(private http: HttpClient,
     private call: MainService) {

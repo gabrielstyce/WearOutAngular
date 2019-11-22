@@ -39,6 +39,22 @@ export class MasterEranca {
 
   }
 
+  GetRetornoStringData(a: Date) {
+    var ano = a.getFullYear();
+    var mes = a.getMonth();
+    var dia = a.getDay();
+
+    return `${dia}/${mes}/${ano}`;
+  }
+
+  GetDataString(a: string) {
+    var ano = a.substring(0,4);
+    var mes = a.substring(5,7);
+    var dia = a.substring(8,10);
+
+    return dia + '/' + mes + '/' + ano;
+  }
+
   /**
    * SetTitleTela: seta o nome da tela de forma genérica;
    */

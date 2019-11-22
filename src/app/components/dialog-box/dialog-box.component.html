@@ -8,13 +8,13 @@
     Certeza que dezeja deletar <b>{{local_data.name}}</b>?
   </ng-template>
   <mat-form-field *ngIf="action != 'Delete'; else elseTemplate">
-    <input placeholder="{{action}} Nome" matInput [(ngModel)]="local_data.name">
+    <input placeholder="Nome" matInput [(ngModel)]="local_data.name">
   </mat-form-field>
   <mat-form-field *ngIf="action != 'Delete'; else false">
-    <input placeholder="{{action}} Preço" matInput [(ngModel)]="local_data.preco">
+    <input placeholder="Preço" matInput [(ngModel)]="local_data.preco">
   </mat-form-field>
   <mat-form-field *ngIf="action != 'Delete';  else false">
-    <input placeholder="{{action}} Categoria" matInput [(ngModel)]="local_data.categoria">
+    <input placeholder="Quantidade" matInput [(ngModel)]="local_data.qtdFornecida">
   </mat-form-field>
 </div>
 <div mat-dialog-actions>
