@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { MainNavComponent } from '../../main-nav/main-nav.component';
 import { MasterEranca } from 'src/app/masterEranca';
 import { Produto } from 'src/app/models/produto';
-import { MatTable, MatDialog } from '@angular/material';
+import { MatTable, MatDialog, MatPaginator, MatTableDataSource, MatSort } from '@angular/material';
 import { ProdutosService } from 'src/app/services/produtos.service';
 import { DialogBoxComponent } from 'src/app/components/dialog-box/dialog-box.component';
 
@@ -22,10 +22,12 @@ export class EstoqueComponent extends MasterEranca implements OnInit {
   isFirstOpen = true;
 
   //Table
-  dataSource = ELEMENT_DATA;
+  dataSource = new MatTableDataSource<Produto>(ELEMENT_DATA);;
   displayedColumns: string[] = ['codigo', 'name', 'categoria', 'qtdFornecida', 'preco', 'dtFornecida', 'action']; // Menus a serem apresentados
 
+  @ViewChild(MatSort, {static: true}) sort: MatSort;
   @ViewChild(MatTable, { static: true }) table: MatTable<any>;
+  @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
 
   constructor(
     private componenteMenu: MainNavComponent,
@@ -44,15 +46,17 @@ export class EstoqueComponent extends MasterEranca implements OnInit {
   }
 
   CarregarForm(valores: any[]) {
-    this.dataSource = [];
+    this.dataSource.data = [];
 
     valores.forEach(x => {
       if (x.dtFornecida != undefined)
         x.dataRetorno = this.GetDataString(x.dtFornecida);
     });
 
-    this.dataSource.push(...valores);
+    this.dataSource.data.push(...valores);
     this.table.renderRows();
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
   }
 
   openDialog(action, obj) {
@@ -63,16 +67,16 @@ export class EstoqueComponent extends MasterEranca implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      if (result.event == 'Update') {
+      if (result.event == 'Atualizar') {
         this.updateRowData(result.data);
-      } else if (result.event == 'Delete') {
+      } else if (result.event == 'Desativar') {
         this.deleteRowData(result.data);
       }
     });
   }
 
   updateRowData(row_obj) {
-    this.dataSource = this.dataSource.filter((value, key) => {
+    this.dataSource.data = this.dataSource.data.filter((value, key) => {
       if (value.codigo == row_obj.codigo) {
         if (value.produtoId == row_obj.produtoId) {
           if (value.produtoId > 0) {
@@ -126,5 +130,9 @@ export class EstoqueComponent extends MasterEranca implements OnInit {
 
       this.table.renderRows();
     }
+  }
+
+  applyFilter(filterValue: string) {
+    this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 }

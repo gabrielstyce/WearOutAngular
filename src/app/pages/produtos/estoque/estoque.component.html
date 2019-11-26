@@ -1,70 +1,68 @@
 <div class="row">
     <div class="col-12">
-        <accordion [isAnimated]="true">
-            <accordion-group [isOpen]="isFirstOpen">
-                <button class="btn btn-link btn-block clearfix" accordion-heading type="button">
-                    <div class="pull-left float-left header">Produtos Ativos e em estoque</div>
-                </button>
-                <div class="row">
-                    <div class="col-12">
-                        <table mat-table [dataSource]="dataSource" #mytable class="my-table mat-elevation-z8 full">
+        <div class="row col-4 mt-2 mx-1">
+            <mat-form-field class="full" appearance="outline">
+                <mat-label>Filtrar</mat-label>
+                <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Blusa Azul...">
+                <mat-icon matSuffix>filter_list</mat-icon>
+                <mat-hint>*Digite e filtre por qualquer campo da tabela.</mat-hint>
+            </mat-form-field>
+        </div>
+        <table mat-table [dataSource]="dataSource" #mytable matSort class="my-table mat-elevation-z8 full">
 
-                            <!--- Note that these columns can be defined in any order.
+            <!--- Note that these columns can be defined in any order.
                 The actual rendered columns are set as a property on the row definition" -->
 
-                            <!-- Codigo Column -->
-                            <ng-container matColumnDef="codigo">
-                                <th mat-header-cell *matHeaderCellDef> Codigo </th>
-                                <td mat-cell *matCellDef="let element"> {{element.codigo}} </td>
-                            </ng-container>
+            <!-- Codigo Column -->
+            <ng-container matColumnDef="codigo">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Codigo </th>
+                <td mat-cell *matCellDef="let element"> {{element.codigo}} </td>
+            </ng-container>
 
-                            <!-- Name Column -->
-                            <ng-container matColumnDef="name">
-                                <th mat-header-cell *matHeaderCellDef> Name </th>
-                                <td mat-cell *matCellDef="let element"> {{element.name}} </td>
-                            </ng-container>
+            <!-- Name Column -->
+            <ng-container matColumnDef="name">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Name </th>
+                <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+            </ng-container>
 
-                            <!-- Preço Column -->
-                            <ng-container matColumnDef="preco">
-                                <th mat-header-cell *matHeaderCellDef> Preco </th>
-                                <td mat-cell *matCellDef="let element"> {{element.preco}} </td>
-                            </ng-container>
+            <!-- Preço Column -->
+            <ng-container matColumnDef="preco">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Preco </th>
+                <td mat-cell *matCellDef="let element"> {{element.preco}} </td>
+            </ng-container>
 
-                            <!-- Categoria Column -->
-                            <ng-container matColumnDef="qtdFornecida">
-                                    <th mat-header-cell *matHeaderCellDef> Quantidade em estq. </th>
-                                    <td mat-cell *matCellDef="let element"> {{element.qtdFornecida}} </td>
-                                </ng-container>
+            <!-- Categoria Column -->
+            <ng-container matColumnDef="qtdFornecida">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Quantidade em estq. </th>
+                <td mat-cell *matCellDef="let element"> {{element.qtdFornecida}} </td>
+            </ng-container>
 
-                            <!-- Categoria Column -->
-                            <ng-container matColumnDef="categoria">
-                                <th mat-header-cell *matHeaderCellDef> Categoria </th>
-                                <td mat-cell *matCellDef="let element"> {{element.categoria}} </td>
-                            </ng-container>
+            <!-- Categoria Column -->
+            <ng-container matColumnDef="categoria">
+                <th mat-header-cell *matHeaderCellDef> Categoria </th>
+                <td mat-cell *matCellDef="let element"> {{element.categoria}} </td>
+            </ng-container>
 
-                            <!-- Data Column -->
-                            <ng-container matColumnDef="dtFornecida">
-                                <th mat-header-cell *matHeaderCellDef> Ultima atualização </th>
-                                <td mat-cell *matCellDef="let element"> {{element.dataRetorno}} </td>
-                            </ng-container>
+            <!-- Data Column -->
+            <ng-container matColumnDef="dtFornecida">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Ultima atualização </th>
+                <td mat-cell *matCellDef="let element"> {{element.dataRetorno}} </td>
+            </ng-container>
 
-                            <!-- Action Column -->
-                            <ng-container matColumnDef="action">
-                                <th mat-header-cell *matHeaderCellDef> Ações </th>
-                                <td mat-cell *matCellDef="let element" class="action-link">
-                                    <a (click)="openDialog('Update',element)"><button mat-button><i
-                                                class="material-icons">edit</i></button></a> |
-                                    <a (click)="openDialog('Delete',element)"><button mat-button><i
-                                                class="material-icons">delete_sweep</i></button></a>
-                                </td>
-                            </ng-container>
+            <!-- Action Column -->
+            <ng-container matColumnDef="action">
+                <th mat-header-cell *matHeaderCellDef> Ações </th>
+                <td mat-cell *matCellDef="let element" class="action-link">
+                    <a (click)="openDialog('Atualizar',element)"><button mat-button><i
+                                class="material-icons">edit</i></button></a> |
+                    <a (click)="openDialog('Desativar',element)"><button mat-button><i
+                                class="material-icons">delete_sweep</i></button></a>
+                </td>
+            </ng-container>
 
-                            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-                            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-                        </table>
-                    </div>
-                </div>
-            </accordion-group>
-        </accordion>
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+        <mat-paginator [pageSize]="10" [hidePageSize]="true" showFirstLastButtons></mat-paginator>
     </div>
 </div>

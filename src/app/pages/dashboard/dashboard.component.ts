@@ -21,14 +21,30 @@ export class DashboardComponent extends MasterEranca implements OnInit {
       }
     }
   };
-  public barChartLabels: Label[] = ['2006', '2007', '2008', '2009', '2010', '2011', '2012'];
+  public barChartLabels: Label[] = ['Jan', 'Fev'];//, 'Qua', 'Qui', 'Sex', 'Sab', 'Dom'
   public barChartType: ChartType = 'bar';
   public barChartLegend = true;
   public barChartPlugins = [pluginDataLabels];
 
+  public a = Math.round(Math.random() * 100);
+  public b = Math.round(Math.random() * 100);
+  public c = Math.round(Math.random() * 100);
+  public d = Math.round(Math.random() * 100);
+  public e = Math.round(Math.random() * 100);
+  public f = Math.round(Math.random() * 100);
+  public g = Math.round(Math.random() * 100);
+  public h = Math.round(Math.random() * 100);
+
+
   public barChartData: ChartDataSets[] = [
-    { data: [65, 59, 80, 81, 56, 55, 40], label: 'Series A' },
-    { data: [28, 48, 40, 19, 86, 27, 90], label: 'Series B' }
+    { data: [this.a, this.h ], label: 'Prod. + Vendido: Series A' }, //,80, 81, 56, 55, 40
+    { data: [this.b, this.g ], label: 'Prod. - Vendido: Series B' }, //,40, 19, 86, 27, 90
+    { data: [this.c, this.f ], label: 'Prod. - Vendido: Series B' }, //,40, 19, 86, 27, 90
+    { data: [this.d, this.e ], label: 'Prod. - Vendido: Series B' }, //,40, 19, 86, 27, 90
+    { data: [this.e, this.d ], label: 'Prod. - Vendido: Series B' }, //,40, 19, 86, 27, 90
+    { data: [this.f, this.c ], label: 'Prod. - Vendido: Series B' }, //,40, 19, 86, 27, 90
+    { data: [this.g, this.b ], label: 'Prod. - Vendido: Series B' }, //,40, 19, 86, 27, 90
+    { data: [this.h, this.a ], label: 'Prod. - Vendido: Series B' }, //,40, 19, 86, 27, 90
   ];
 
   constructor(private componenteMenu: MainNavComponent) {
@@ -73,7 +89,7 @@ export class DashboardComponent extends MasterEranca implements OnInit {
       },
     }
   };
-  public pieChartLabels: Label[] = [['Download', 'Sales'], ['In', 'Store', 'Sales'], 'Mail Sales'];
+  public pieChartLabels: Label[] = [['Adicionadas ao', 'Carrinho'], ['Vendas', 'Em', 'Estoque'], ['Vendas', 'Canceladas']];
   public pieChartData: number[] = [300, 500, 100];
   public pieChartType: ChartType = 'pie';
   public pieChartLegend = true;
@@ -113,5 +129,9 @@ export class DashboardComponent extends MasterEranca implements OnInit {
 
   changeLegendPosition() {
     this.pieChartOptions.legend.position = this.pieChartOptions.legend.position === 'left' ? 'top' : 'left';
+  }
+
+  ngOnDestroy() {
+    this;
   }
 }

@@ -1,26 +1,26 @@
 <!-- dialog-box.component.html -->
 <div class="row">
-  <h1 mat-dialog-title class="col-10">{{action}} <strong>{{local_data.name}}</strong> </h1>
+  <h1 mat-dialog-title class="col-10">{{action}} produto: <strong>{{local_data.name}}</strong> </h1>
   <h1 class="col-2"><i class="material-icons" style="margin-left: 0%; font-size: 30px;">warning</i></h1>
 </div>
 <div mat-dialog-content>
   <ng-template #elseTemplate>
-    Certeza que dezeja deletar <b>{{local_data.name}}</b>?
+    Tem certeza que dezeja desativar o item: <b>{{local_data.name}}</b>?
   </ng-template>
-  <mat-form-field *ngIf="action != 'Delete'; else elseTemplate">
+  <mat-form-field *ngIf="action != 'Desativar'; else elseTemplate">
     <input placeholder="Nome" matInput [(ngModel)]="local_data.name">
   </mat-form-field>
-  <mat-form-field *ngIf="action != 'Delete'; else false">
+  <mat-form-field *ngIf="action != 'Desativar'; else false">
     <input placeholder="Preço" matInput [(ngModel)]="local_data.preco">
   </mat-form-field>
-  <mat-form-field *ngIf="action != 'Delete';  else false">
+  <mat-form-field *ngIf="action != 'Desativar';  else false">
     <input placeholder="Quantidade" matInput [(ngModel)]="local_data.qtdFornecida">
   </mat-form-field>
 </div>
 <div mat-dialog-actions>
   
-  <button mat-button (click)="doAction()" mat-flat-button *ngIf="action != 'Delete';  else false" color="primary">{{action}}</button>
-  <button mat-button (click)="doAction()" mat-flat-button *ngIf="action == 'Delete';"  color="warn" >{{action}}</button>
-  <button mat-button (click)="closeDialog()" mat-flat-button color="warn" *ngIf="action == 'Delete';"  color="primary">Cancel</button>
-  <button mat-button (click)="closeDialog()" mat-flat-button color="warn" *ngIf="action != 'Delete';  else false">Cancel</button>
+  <button mat-button (click)="doAction()" mat-flat-button *ngIf="action != 'Desativar';  else false" color="primary">{{action}}</button>
+  <button mat-button (click)="doAction()" mat-flat-button *ngIf="action == 'Desativar';"  color="warn" >{{action}}</button>
+  <button mat-button (click)="closeDialog()" mat-flat-button color="warn" *ngIf="action == 'Desativar';"  color="primary">Cancel</button>
+  <button mat-button (click)="closeDialog()" mat-flat-button color="warn" *ngIf="action != 'Desativar';  else false">Cancel</button>
 </div>

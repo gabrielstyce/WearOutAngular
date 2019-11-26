@@ -1,22 +1,13 @@
-.full {
-    height: 100%;
-    width: 100%;
-}
-
-.header {
-    font-size: 2em;
-    font-display: flex;
-}
-
 table {
-    text-align: center !important;
+    text-align: left !important;
     width: 100%;
 }
 
-.mat-header-cell {
-    text-align: center;
-}
+.mat-form-field {
+    font-size: 14px;
+    width: 100%;
+  }
 
-.content-div {
-    transform: translate(-50%, -50%);
-}
+  .mat-column-select {
+    overflow: initial;
+  }

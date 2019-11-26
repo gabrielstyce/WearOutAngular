@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { MainNavComponent } from "src/app/pages/main-nav/main-nav.component";
 import { MasterEranca } from 'src/app/masterEranca';
 import { BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
-import { MatDialog, MatTable } from '@angular/material';
+import { MatDialog, MatTable, MatPaginator, MatTableDataSource } from '@angular/material';
 import { DialogBoxComponent } from 'src/app/components/dialog-box/dialog-box.component';
 import { Produto } from "src/app/models/produto";
 import { Fornecedor } from 'src/app/models/fornecedor';
@@ -14,6 +14,7 @@ const ELEMENT_DATA: Produto[] = [
   { codigo: 1560608787815, name: 'Vestido Bege', categoria: 'Moda Verão, Bonprix', preco: 79.99 },
   { codigo: 1560608805101, name: 'Vestido Decote Redondo', categoria: 'Moda Evangélica, Estampado, Rosalie', preco: 39.99 }
 ];
+
 
 @Component({
   selector: 'app-c-produto',
@@ -27,12 +28,14 @@ export class CProdutoComponent extends MasterEranca implements OnInit {
   isFirstOpen = true;
 
   //Table
-  dataSource = ELEMENT_DATA;
-  bsConfig: Partial<BsDatepickerConfig>;
   displayedColumns: string[] = ['codigo', 'name', 'categoria', 'preco', 'dtFornecida', 'action']; // Menus a serem apresentados //,  'dtFornecida'
+  dataSource = new MatTableDataSource<Produto>(ELEMENT_DATA);
+  bsConfig: Partial<BsDatepickerConfig>;
+
   //*A order das colunas é a mesma do apresentada no array
 
   @ViewChild(MatTable, { static: true }) table: MatTable<any>;
+  @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
 
   constructor(
     private dialog: MatDialog,
@@ -45,6 +48,7 @@ export class CProdutoComponent extends MasterEranca implements OnInit {
   }
 
   ngOnInit() {
+    
     this.limparProduto();
 
     this.bsConfig = Object.assign({}, { containerClass: 'theme-dark-blue', isAnimated: true }); //Config do datePicker
@@ -54,15 +58,16 @@ export class CProdutoComponent extends MasterEranca implements OnInit {
   }
 
   CarregaForm(valores: any[]) {
-    this.dataSource = [];
+    this.dataSource.data = [];
 
     valores.forEach(x => {
       if (x.dtFornecida != undefined)
         x.dataRetorno = this.GetDataString(x.dtFornecida);
     });
 
-    this.dataSource.push(...valores);
+    this.dataSource.data.push(...valores);
     this.table.renderRows();
+    this.dataSource.paginator = this.paginator;
   }
 
   BuscarProdutoId() {
@@ -101,7 +106,9 @@ export class CProdutoComponent extends MasterEranca implements OnInit {
   carregarRetorno(valor: any) {
     console.log(valor);
     if (valor) {
+      var data = new Date(valor.dtFornecida);
       this.produto = valor;
+      this.produto.dtFornecida = data;
       this.BuscarEstoqueId();
       this.BuscarFornecedorId();
     } else {
@@ -131,14 +138,14 @@ export class CProdutoComponent extends MasterEranca implements OnInit {
       this.produto.produtoId = obj.produtoId;
       this.BuscarProdutoId();
       this.gotoTop();
-    } else if (action == 'Delete') {
+    } else if (action == 'Desativar') {
       const dialogRef = this.dialog.open(DialogBoxComponent, {
         width: '300px',
         data: obj
       });
 
       dialogRef.afterClosed().subscribe(result => {
-        if (result.event == 'Delete') {
+        if (result.event == 'Desativar') {
           this.deleteRowData(result.data);
           this.limparProduto();
         }
@@ -149,7 +156,7 @@ export class CProdutoComponent extends MasterEranca implements OnInit {
   deleteRowData(row_obj) {
     if (row_obj.produtoId > 0) {
       this.produtoService.inativarProduto(row_obj.produtoId).subscribe(res => console.log(res));
-      this.dataSource = this.dataSource.filter((value, key) => {
+      this.dataSource.data = this.dataSource.data.filter((value, key) => {
         return value.produtoId != row_obj.produtoId;
       });
 
@@ -183,7 +190,7 @@ export class CProdutoComponent extends MasterEranca implements OnInit {
       endereco: null,
       estado: null,
       fullName: null,
-      id: null,
+      userId: null,
       password: null,
       phone: null,
       produtosID: null,
@@ -218,6 +225,7 @@ export class CProdutoComponent extends MasterEranca implements OnInit {
     (item.qtdFornecida == null) ? item.qtdFornecida = 0 : item.qtdFornecida = item.qtdFornecida;
     (item.qtdProduto == null) ? item.qtdProduto = 0 : item.qtdProduto = item.qtdProduto;
     (item.vendedorID == null) ? item.vendedorID = 0 : item.vendedorID = item.vendedorID;
+    (item.urlImage == null) ? item.urlImage = 'https://i.imgur.com/eKIuG6P.png' : item.vendedorID = item.vendedorID;
 
     p = {
       "codigo": item.codigo,
@@ -231,7 +239,8 @@ export class CProdutoComponent extends MasterEranca implements OnInit {
       "qtdFornecida": item.qtdFornecida,
       "dtFornecida": item.dtFornecida,
       "vendedorID": item.vendedorID,
-      "fornecedorID": item.fornecedorID
+      "fornecedorID": item.fornecedorID,
+      "urlImage": item.urlImage,
     }
 
     if (item.produtoId > 0) {
@@ -243,7 +252,7 @@ export class CProdutoComponent extends MasterEranca implements OnInit {
               p.produtoId = res.produtoId;
               this.produtoService.updateProduto(p.produtoId, p).subscribe((res: any) => {
                 if (p)
-                  this.dataSource = this.dataSource.filter((value, key) => {
+                  this.dataSource.data = this.dataSource.data.filter((value, key) => {
                     if (value.codigo == p.codigo) {
                       value = {
                         codigo: value.codigo,

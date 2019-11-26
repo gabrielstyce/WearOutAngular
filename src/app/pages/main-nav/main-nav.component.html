@@ -30,7 +30,6 @@
           <i class="material-icons  mx-2">shopping_cart</i> Produtos</button>
         <mat-menu class="mx-4" #produtosMenu="matMenu" yPosition="below">
           <button mat-menu-item (click)="navigateMenu('Cadastro_Produto')">Cadastrar</button>
-          <button mat-menu-item (click)="navigateMenu('Relacao_Produtos')">Relação</button>
           <button mat-menu-item (click)="navigateMenu('Estoque')">Estoque</button>
         </mat-menu>
       </h1>
@@ -65,6 +64,8 @@
       <mat-icon *ngIf="userVerificado" class="verification" aria-hidden="false" aria-label="Example user verified icon">
         verified_user</mat-icon>
     </mat-toolbar>
-    <router-outlet></router-outlet>
+    <div class="col-12 p-0">
+      <router-outlet></router-outlet>
+    </div>
   </mat-sidenav-content>
 </mat-sidenav-container>

@@ -8,240 +8,161 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MatDialog, MatTable, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { DialogBoxComponent } from 'src/app/components/dialog-box/dialog-box.component';
 import { FornecedoresService } from 'src/app/services/fornecedores.service';
+import { Produto } from 'src/app/models/produto';
 
-export interface UsersData {
-  estado: string;
-  id: number;
-}
+const ELEMENT_DATA: Fornecedor[] = [
+  { userId: 1560608796014, fullName: 'Antônio Prado', phone: 98320859 },
+  { userId: 1560608787815, fullName: 'Venegere Orlin', phone: 98468598 },
+  { userId: 1560608805101, fullName: 'Rolene Santana', phone: 99608554 },
+  { userId: 123123123, fullName: 'asd', phone: 11111111 }
+];
+
+const ELEMENT_DATAP: Produto[] = [
+  { codigo: 1560608796014, name: 'Vestido Preto Transpassado', categoria: 'Moda Pop, Alça Dupla', preco: 39.99, dataRetorno: '22/11/2019' },
+  { codigo: 1560608787815, name: 'Vestido Bege', categoria: 'Moda Verão, Bonprix', preco: 79.99, dataRetorno: '13/08/2019' },
+  { codigo: 1560608805101, name: 'Vestido Decote Redondo', categoria: 'Moda Evangélica, Estampado, Rosalie', preco: 39.99, dataRetorno: '07/09/2019' }
+];
+
 @Component({
   selector: 'app-c-fornecedor',
   templateUrl: './c-fornecedor.component.html',
   styleUrls: ['./c-fornecedor.component.scss']
 })
 export class CFornecedorComponent extends MasterEranca implements OnInit {
-  // public isFirstOpen = true;
-  // public nomeButton = "Gravar";
-  // public fornecedor: Fornecedor;
+  public isFirstOpen = true;
+  public fornecedor: Fornecedor;
 
-  // // Table
-  // myForm: FormGroup;
-  // colorTheme = 'theme-blue';
-  // displayedColumns: string[] = ['.password', '.estado', '.fullName', 'categoria', '.cpf', 'action'];
-  // protudoList: Fornecedor[]
-  // dataSource = new MatTableDataSource(this.protudoList);
-  // bsConfig: Partial<BsDatepickerConfig>;
-  // prod;
+  //Table
+  displayedColumnsProd: string[] = ['codigo', 'name', 'categoria', 'preco', 'dtFornecida'];
+  dataSourceProd = new MatTableDataSource(ELEMENT_DATAP);
 
-  // @ViewChild(MatTable, { static: true }) table: MatTable<any>;
+  displayedColumnsCad: string[] = ['userId', 'fullName', 'phone', 'action'];
+  dataSourceCadastrados = new MatTableDataSource(ELEMENT_DATA);
+
+  @ViewChild(MatTable, { static: true }) table: MatTable<any>;
+  @ViewChild('mytableCad', { static: true }) mytableCad: MatTable<any>;
 
   constructor(
-    // private componenteMenu: MainNavComponent,
-    // public dialog: MatDialog,
-    // private fornecedorService: FornecedoresService
+    private componenteMenu: MainNavComponent,
+    public dialog: MatDialog,
+    private fornecedorService: FornecedoresService
   ) {
     super();
-    // this.componenteMenu.titleTela = this.SetTitleTela("Cadastro de Fornecedor");
+    this.componenteMenu.titleTela = this.SetTitleTela("Cadastro de Fornecedor");
   }
 
-  // openDialog(action, obj) {
-  //   obj.action = action;
-  //   const dialogRef = this.dialog.open(DialogBoxComponent, {
-  //     width: '300px',
-  //     data: obj
-  //   });
+  openDialog(action, obj) {
+    obj.action = action;
+    debugger;
 
-  //   dialogRef.afterClosed().subscribe(result => {
-  //     if (result.event == 'Add') {
-  //       this.addRowData(result.data);
-  //     } else if (result.event == 'Update') {
-  //       this.updateRowData(result.data);
-  //     } else if (result.event == 'Delete') {
-  //       this.deleteRowData(result.data);
-  //     }
-  //   });
-  // }
+    if (action == 'Update') {
+      this.updateRowData(obj);
+    } else if (action == 'Desativar') {
+      const dialogRef = this.dialog.open(DialogBoxComponent, {
+        width: '300px',
+        data: obj
+      });
 
-  // addRowData(row_obj: Fornecedor) {
-  //   var d = new Date();
-  //   this.dataSource.data.push(row_obj);
-  //   this.table.renderRows();
-  // }
+      dialogRef.afterClosed().subscribe(result => {
+        if (result.event === 'Desativar') {
+          this.deleteRowData(obj);
+        }
+      });
+    }
+  }
 
-  // updateRowData(row_obj: Fornecedor) {
-  //   let d = new Date();
-  //   this.dataSource.data = this.dataSource.data.filter((value, key) => {
-  //     // if (value.password == row_obj.password && value.id == row_obj.id) {
-  //     //   value.estado = row_obj.estado
-  //     //   value.fullName = row_obj.fullName
-  //     //   value.categoria = row_obj.categoria
-  //     //   value.cidade = row_obj.cidade
-  //     //   value.cpf = d
-  //     //   value.email = row_obj.email
-  //     //   value.endereco = row_obj.endereco
-  //     //   value.nomeEstoque = row_obj.nomeEstoque
-  //     //   value.phone = row_obj.phone
-  //     //   value.fornecedorsID = row_obj.fornecedorsID
-  //     //   value.userName = row_obj.userName
-  //     // }
-  //     return true;
-  //   });
-  // }
-  // deleteRowData(row_obj) {
-  //   this.dataSource.data = this.dataSource.data.filter((value, key) => {
-  //     // return value.password != row_obj.password;
-  //   });
-  //   this.table.renderRows();
-  // }
+  onBlurMethod() {
+    debugger;
+    if (this.fornecedor.phone.toString().length > 8) this.fornecedor.phone = parseInt(this.fornecedor.phone.toString().slice(1, 9));
+  }
+
+  updateRowData(row_obj: Fornecedor) {
+    if (row_obj.userId > 0)
+      this.fornecedorService.getFornecedorById(row_obj.userId).subscribe(
+        (res: any) => {
+          if (res) {
+            this.fornecedor = res;
+          }
+        }
+      )
+  }
+
+  deleteRowData(row_obj) {
+    this.dataSourceCadastrados.data = this.dataSourceCadastrados.data.filter((value, key) => {
+      return value.userId != row_obj.userId;
+    });
+    if (row_obj.userId > 0) this.fornecedorService.inativarFornecedor(row_obj.userId);
+    this.mytableCad.renderRows();
+    this.carregar();
+  }
 
   ngOnInit() {
-    // this.componenteMenu.SetTitleTela("Cadastro de Fornecedor");
-    // this.bsConfig = Object.assign({}, { containerClass: 'theme-dark-blue', isAnimated: true });
+    this.fornecedorService.getFornecedores().subscribe(res => this.CarregaForm(res as []));
 
-    // this.myForm = new FormGroup({
-    //   id: new FormControl(''),
-    //   password: new FormControl(''),
-    //   estado: new FormControl(''),
-    //   cidade: new FormControl(''),
-    //   categoria: new FormControl(''),
-    //   fullName: new FormControl(''),
-    //   fornecedorsID: new FormControl(''),
-    //   endereco: new FormControl(''),
-    //   nomeEstoque: new FormControl(''),
-    //   phone: new FormControl(''),
-    //   cpf: new FormControl(''),
-    //   userName: new FormControl(''),
-    //   email: new FormControl(''),
-    //   nomeFornecedor: new FormControl(''),
-    // });
-
-    // this.fornecedorService.getFornecedors().subscribe(res => this.CarregaForm(res as []));
-
-    // this.limparFornecedor();
-    // console.log(this.protudoList);
+    this.limparFornecedor();
   }
 
-  // protected gravar() {
+  public CarregaForm(valores: any[]) {
+    debugger;
+    this.dataSourceCadastrados.data = [];
+    this.dataSourceCadastrados.data.push(...valores);
+    this.mytableCad.renderRows();
+  }
 
-  //   console.log("Gravado");
-  // }
+  public limparFornecedor() {
+    this.fornecedor = {
+      password: null,
+      estado: null,
+      fullName: null,
+      cidade: null,
+      cpf: null,
+      email: null,
+      endereco: null,
+      userId: null,
+      phone: null,
+      userName: null,
+    }
+  }
 
-  // public CarregaForm(valores: []) {
-  //   this.dataSource.data.push(...valores);
-  //   this.table.renderRows();
-  // }
+  carregar() {
+    this.fornecedorService.getFornecedores().subscribe(res => this.CarregaForm(res as any));
+  }
 
-  // onSubmit() {
-  //   // if (this.fornecedor.estado == null) alert("Um ou mais campos não estão preenchidos");
+  protected salvar() {
+    debugger;
+    var p: any;
+    if (this.fornecedor.userId > 0) {
+      this.fornecedorService.getFornecedorById(this.fornecedor.userId).subscribe(
+        (res: any) => {
+          if (res) {
+            if(res.userId) {
+              p = {
+                userId: this.fornecedor.userId,
+                fullName: this.fornecedor.fullName,
+                phone: this.fornecedor.phone
+              }
+              this.fornecedorService.updateFornecedor(res.userId, p).subscribe(res => console.log(res));
+              this.carregar();
+            } else {
+              p = {
+                fullName: this.fornecedor.fullName,
+                phone: this.fornecedor.phone
+              }
+              this.fornecedorService.createFornecedor(p).subscribe(res => console.log(res));
+              this.carregar();
+            }
+          }
+        }
+      );
+    } else {
+      p = {
+        fullName: this.fornecedor.fullName,
+        phone: this.fornecedor.phone
+      }
+      this.fornecedorService.createFornecedor(p).subscribe(res => console.log(res));
+      this.carregar();
+    }
 
-  //   console.log(this.fornecedor);
-  //   this.PrepararCadastro(this.fornecedor, false);
-  //   // var lista: any = {};
-  //   // lista = this.myForm.value;
-    // console.log(this.fornecedor);
-
-    // this.fornecedor = {
-    //   .password: lista.password,
-    //   .estado: lista.estado,
-    //   .fullName: lista.fullName,
-    //   categoria: lista.categoria,
-    //   .cidade: lista.cidade,
-    //   .cpf: lista.cpf,
-    //   .email: lista.email,
-    //   .endereco: lista.endereco,
-    //   .id: lista.id,
-    //   nomeEstoque: lista.nomeEstoque,
-    //   .phone: lista.phone,
-    //   .fornecedorsID: lista.fornecedorsID,
-    //   .userName: lista.userName,
-    // }
-
-    // this.dataSource.data.push(this.fornecedor);
-
-    // console.log(this.dataSource);
-  // }
-
-  // public limparFornecedor() {
-  //   this.fornecedor = {
-  //     password: null,
-  //     estado: null,
-  //     fullName: null,
-  //     cidade: null,
-  //     cpf: null,
-  //     email: null,
-  //     endereco: null,
-  //     id: null,
-  //     phone: null,
-  //     userName: null,
-  //   }
-  // }
-
-  // public PrepararCadastro(item: Fornecedor, delet?: any) {
-  //   let p: any = {};
-  //   let d = new Date();
-
-  //   (item.cep == null) ? item.cep = 0 : item.cep = item.cep;
-  //   (item.cidade == null) ? item.cidade = "" : item.cidade = item.cidade;
-  //   (item.cpf == null) ? item.cpf = "" : item.cpf = item.cpf;
-  //   (item.email == null) ? item.email = "" : item.email = item.email;
-  //   (item.endereco == null) ? item.endereco = "" : item.endereco = item.endereco;
-  //   (item.estado == null) ? item.estado = "" : item.estado = item.estado;
-  //   (item.fullName == null) ? item.fullName = "" : item.fullName = item.fullName;
-  //   (item.password == null) ? item.password = "" : item.password = item.password;
-  //   (item.phone == null) ? item.phone = 0 : item.phone = item.phone;
-  //   (item.userName == null) ? item.userName = "" : item.userName = item.userName;
-
-  //   if (item.id > 0 && !delet) {
-
-  //     p = {
-  //       "id": item.id,
-  //       "password": item.password,
-  //       "estado": item.estado,
-  //       "cidade": item.cidade,
-  //       "fullName": item.fullName,
-  //       "fornecedorsID": item.phone,
-  //       "endereco": item.endereco,
-  //       "phone": item.phone,
-  //       "cpf": item.cpf,
-  //       "userName": item.userName,
-  //       "email": item.email
-  //     }
-
-  //     // this.fornecedorService.updateFornecedor(item.id, item);
-  //   } else if (delet) {
-
-  //     p = {
-  //       ".password": item.password,
-  //       ".estado": item.estado,
-  //       ".cidade": item.cidade,
-  //       ".fullName": item.fullName,
-  //       ".fornecedorsID": item.phone,
-  //       ".endereco": item.endereco,
-  //       ".phone": item.phone,
-  //       ".cpf": item.cpf,
-  //       ".userName": item.userName,
-  //       ".email": item.email
-  //     }
-
-  //     // this.fornecedorService.updateFornecedor(item.id, item);
-  //   } else {
-      
-  //     p = {
-  //       ".password": item.password,
-  //       ".estado": item.estado,
-  //       ".cidade": item.cidade,
-  //       // "categoria": item.categoria,
-  //       ".fullName": item.fullName,
-  //       ".fornecedorsID": item.phone,
-  //       ".endereco": item.endereco,
-  //       // "nomeEstoque": item.nomeEstoque,
-  //       ".phone": item.phone,
-  //       ".cpf": item.cpf,
-  //       ".userName": item.userName,
-  //       ".email": item.email
-  //     }
-
-  //     // if (!delet) this.fornecedorService.postFornecedor(p).subscribe(res => console.log(res));
-  //   }
-  // }
-
+    
+  }
 }

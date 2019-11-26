@@ -20,7 +20,9 @@ import {
   MatTableModule,
   MatInputModule,
   MatDialogModule,
-  MatFormFieldModule
+  MatFormFieldModule,
+  MatPaginatorModule,
+  MatSortModule
 } from '@angular/material';
 
 // Modulos do Ngx-Bootstrap
@@ -33,7 +35,6 @@ import {
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { MainNavComponent } from './pages/main-nav/main-nav.component';
 import { CProdutoComponent } from './pages/produtos/c-produto/c-produto.component';
-import { RProdutoComponent } from './pages/produtos/r-produto/r-produto.component';
 import { RFornecedorComponent } from './pages/fornecedor/r-fornecedor/r-fornecedor.component';
 import { CFornecedorComponent } from './pages/fornecedor/c-fornecedor/c-fornecedor.component';
 import { RClienteComponent } from './pages/clientes/r-cliente/r-cliente.component';
@@ -50,7 +51,6 @@ import { DialogBoxComponent } from './components/dialog-box/dialog-box.component
     DashboardComponent,
     MainNavComponent,
     CProdutoComponent,
-    RProdutoComponent,
     EstoqueComponent,
     RFornecedorComponent,
     CFornecedorComponent,
@@ -69,6 +69,8 @@ import { DialogBoxComponent } from './components/dialog-box/dialog-box.component
     MatTableModule,
     FormsModule,
     ReactiveFormsModule,
+    MatPaginatorModule,
+    MatSortModule,
     // NGX Bootstrap
     TabsModule.forRoot(),
     AccordionModule.forRoot(),

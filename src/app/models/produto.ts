@@ -13,4 +13,5 @@ export interface Produto {
     vendedorID?: number;
     fornecedorID?: number;
     dataRetorno?: string;
+    urlImage?: string;
 }

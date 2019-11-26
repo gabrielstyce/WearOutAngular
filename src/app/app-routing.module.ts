@@ -3,7 +3,6 @@ import { Routes, RouterModule, RouterLink } from '@angular/router';
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
 // import { MainNavComponent } from './pages/main-nav/main-nav.component';
 import { CProdutoComponent } from './pages/produtos/c-produto/c-produto.component';
-import { RProdutoComponent } from './pages/produtos/r-produto/r-produto.component';
 import { EstoqueComponent } from './pages/produtos/estoque/estoque.component';
 import { CFornecedorComponent } from './pages/fornecedor/c-fornecedor/c-fornecedor.component';
 import { RFornecedorComponent } from './pages/fornecedor/r-fornecedor/r-fornecedor.component';
@@ -36,7 +35,6 @@ const routes: Routes = [
     path: 'produtos',
     children : [
         { path: 'cadastro', component : CProdutoComponent, data: { title: 'Wear Out - Controle | Cadastro de Produtos' } },
-        { path: 'relacao', component : RProdutoComponent, data: { title: 'Wear Out - Controle | Relação de Produtos' } },
         { path: 'estoque', component : EstoqueComponent, data: { title: 'Wear Out - Controle | Estoque' } },
     ],
   },
