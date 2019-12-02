@@ -1,0 +1,55 @@
+<div class="full">
+    <div class="col-12 d-flex justify-content-center">
+        <div class="col-4 justify-content-between">
+            <div class="d-flex p-2 justify-content-center my-3">
+                <img src="../../../assets/img/WearOut.svg" width="100px" height="100px"/>
+            </div>
+            <div class="menu">
+                <div class="modal-header">
+                    <h3 *ngIf="login">Login</h3>
+                    <h3 *ngIf="!login">Registre-se</h3>
+                </div>
+                <div class="modal-body">
+                    <form class="form" role="form" autocomplete="off" id="formLogin" novalidate="" method="POST">
+                        <div class="form-group">
+                            <button mat-button *ngIf="login" class="float-right" (click)="mudaForm()">Novo? Registre-se
+                                aqui!</button>
+                            <button mat-button *ngIf="!login" class="float-right" (click)="mudaForm()">Não é novo? Logue
+                                aqui!</button>
+                            <!-- <label for="userName">*Username</label>
+                            <input type="text" class="form-control form-control-lg" name="userName" id="userName"
+                                required="*"> -->
+                            <div class="invalid-feedback">Oops, algo de errado não esta certo.</div>
+                        </div>
+                        <div class="form-group">
+                                <label for="email">*Email</label>
+                                <input type="email" [(ngModel)]="user.email" class="form-control form-control-lg" name="email" id="email"
+                                    required="*">
+                                <div class="invalid-feedback">Oops, algo de errado não esta certo.</div>
+                            </div>
+                        <div class="form-group">
+                            <label for="password">*Senha</label>
+                            <input type="password" [(ngModel)]="user.password" name="password" class="form-control form-control-lg" id="pwd1" required=""
+                                autocomplete="new-password">
+                            <div class="invalid-feedback">Digite sua senha!</div>
+                        </div>
+                        <div class="form-group" *ngIf="!login">
+                            <label for="confirPassword">*Confirme a Senha</label>
+                            <input type="password" [(ngModel)]="user.confirmPassword" name="confirmPassword" class="form-control form-control-lg" id="pwd2" required=""
+                                autocomplete="confirm-password">
+                            <div class="invalid-feedback">Digite sua senha!</div>
+                        </div>
+                        <div class="form-group py-4" *ngIf="login">
+                            <button type="submit" (click)="logar()" class="btn btn-primary btn-lg float-right"
+                                id="btnLogin">Logar</button>
+                        </div>
+                        <div class="form-group py-4" *ngIf="!login">
+                            <button type="submit" (click)="register()" class="btn btn-primary btn-lg float-right"
+                                id="btnLogin">Registrar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -32,17 +32,38 @@ import {
   BsDatepickerModule
 } from 'ngx-bootstrap';
 
-import { DashboardComponent } from './pages/dashboard/dashboard.component';
+// import { DashboardComponent } from './pages/dashboard/dashboard.component';
+// import { MainNavComponent } from './pages/main-nav/main-nav.component';
+// import { CProdutoComponent } from './pages/produtos/c-produto/c-produto.component';
+// import { CFornecedorComponent } from './pages/fornecedor/c-fornecedor/c-fornecedor.component';
+// import { RClienteComponent } from './pages/clientes/r-cliente/r-cliente.component';
+// import { BaixaComponent } from './pages/vendas/baixa/baixa.component';
+// import { EstoqueComponent } from './pages/produtos/estoque/estoque.component';
+// import { RVendaComponent } from './pages/vendas/r-venda/r-venda.component';
+// import { TableComponent } from './components/table/table.component';
+// import { DialogBoxComponent } from './components/dialog-box/dialog-box.component';
+// import { PerfilComponent } from './pages/user/perfil/perfil.component';
+// import { MainpageComponent } from './pages/ecommerce/mainpage/mainpage.component';
+// import { LogginComponent } from './pages/user/loggin/loggin.component';
+
+import { DashboardComponent } from './pages/main-nav/dashboard/dashboard.component';
 import { MainNavComponent } from './pages/main-nav/main-nav.component';
-import { CProdutoComponent } from './pages/produtos/c-produto/c-produto.component';
-import { RFornecedorComponent } from './pages/fornecedor/r-fornecedor/r-fornecedor.component';
-import { CFornecedorComponent } from './pages/fornecedor/c-fornecedor/c-fornecedor.component';
-import { RClienteComponent } from './pages/clientes/r-cliente/r-cliente.component';
-import { BaixaComponent } from './pages/vendas/baixa/baixa.component';
-import { EstoqueComponent } from './pages/produtos/estoque/estoque.component';
-import { RVendaComponent } from './pages/vendas/r-venda/r-venda.component';
+import { CProdutoComponent } from './pages/main-nav/produtos/c-produto/c-produto.component';
+import { EstoqueComponent } from './pages/main-nav/produtos/estoque/estoque.component';
+import { CFornecedorComponent } from './pages/main-nav/fornecedor/c-fornecedor/c-fornecedor.component';
+import { RClienteComponent } from './pages/main-nav/clientes/r-cliente/r-cliente.component';
+import { RVendaComponent } from './pages/main-nav/vendas/r-venda/r-venda.component';
 import { TableComponent } from './components/table/table.component';
+import { PerfilComponent } from './pages/main-nav/perfil/perfil.component';
+import { LogginComponent } from './pages/loggin/loggin.component';
+import { MainpageComponent } from './pages/ecommerce/mainpage/mainpage.component';
 import { DialogBoxComponent } from './components/dialog-box/dialog-box.component';
+import {MatCardModule} from '@angular/material/card';
+import { CarrinhoComponent } from './pages/ecommerce/carrinho/carrinho.component';
+import { DialogVendasComponent } from './components/dialog-vendas/dialog-vendas.component';
+import {MatSnackBarModule} from '@angular/material/snack-bar';
+
+import { CookieService } from 'ngx-cookie-service';
 
 
 @NgModule({
@@ -52,13 +73,16 @@ import { DialogBoxComponent } from './components/dialog-box/dialog-box.component
     MainNavComponent,
     CProdutoComponent,
     EstoqueComponent,
-    RFornecedorComponent,
     CFornecedorComponent,
     RClienteComponent,
-    BaixaComponent,
     RVendaComponent,
     TableComponent,
     DialogBoxComponent,
+    PerfilComponent,
+    MainpageComponent,
+    LogginComponent,
+    CarrinhoComponent,
+    DialogVendasComponent,
   ],
   imports: [
     //Angular
@@ -71,6 +95,7 @@ import { DialogBoxComponent } from './components/dialog-box/dialog-box.component
     ReactiveFormsModule,
     MatPaginatorModule,
     MatSortModule,
+    MatSnackBarModule,
     // NGX Bootstrap
     TabsModule.forRoot(),
     AccordionModule.forRoot(),
@@ -86,14 +111,16 @@ import { DialogBoxComponent } from './components/dialog-box/dialog-box.component
     MatListModule,
     MatDialogModule,
     MatFormFieldModule,
+    MatCardModule,
     //Service
     HttpClientModule,
     ChartsModule,
   ],
   entryComponents: [
-    DialogBoxComponent
+    DialogBoxComponent,
+    DialogVendasComponent
   ],
-  providers: [],
+  providers: [CookieService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

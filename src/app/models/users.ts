@@ -10,4 +10,5 @@ export interface Users {
     estado?: string;
     cep?: number;
     tipo?: string;
+    confirmPassword?: string;
 }

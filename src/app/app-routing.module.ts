@@ -1,61 +1,69 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule, RouterLink } from '@angular/router';
-import { DashboardComponent } from './pages/dashboard/dashboard.component';
-// import { MainNavComponent } from './pages/main-nav/main-nav.component';
-import { CProdutoComponent } from './pages/produtos/c-produto/c-produto.component';
-import { EstoqueComponent } from './pages/produtos/estoque/estoque.component';
-import { CFornecedorComponent } from './pages/fornecedor/c-fornecedor/c-fornecedor.component';
-import { RFornecedorComponent } from './pages/fornecedor/r-fornecedor/r-fornecedor.component';
-import { RClienteComponent } from './pages/clientes/r-cliente/r-cliente.component';
-import { BaixaComponent } from './pages/vendas/baixa/baixa.component';
-import { RVendaComponent } from './pages/vendas/r-venda/r-venda.component';
-import { TableComponent } from './components/table/table.component';
-
+import { DashboardComponent } from './pages/main-nav/dashboard/dashboard.component';
+import { MainNavComponent } from './pages/main-nav/main-nav.component';
+import { CProdutoComponent } from './pages/main-nav/produtos/c-produto/c-produto.component';
+import { EstoqueComponent } from './pages/main-nav/produtos/estoque/estoque.component';
+import { CFornecedorComponent } from './pages/main-nav/fornecedor/c-fornecedor/c-fornecedor.component';
+import { RClienteComponent } from './pages/main-nav/clientes/r-cliente/r-cliente.component';
+import { RVendaComponent } from './pages/main-nav/vendas/r-venda/r-venda.component';
+import { PerfilComponent } from './pages/main-nav/perfil/perfil.component';
+import { LogginComponent } from './pages/loggin/loggin.component';
+import { MainpageComponent } from './pages/ecommerce/mainpage/mainpage.component';
 
 const routes: Routes = [
   {
-    path: 'home',
-    component: DashboardComponent,
-    data: { title: 'Wear Out - Controle' }
-  },
-  {
-    path: 'clientes',
-    children : [
-        { path: 'relacao', component : RClienteComponent, data: { title: 'Wear Out - Controle | Relação de Clientes' } },
+    path: 'core',
+    component: MainNavComponent,
+    children: [
+      {
+        path: 'dashboard',
+        component: DashboardComponent,
+      },
+      {
+        path: 'clientes',
+        children: [
+          { path: 'relacao', component: RClienteComponent },
+        ],
+      },
+      {
+        path: 'fornecedores',
+        children: [
+          { path: 'cadastro', component: CFornecedorComponent },
+        ],
+      },
+      {
+        path: 'produtos',
+        children: [
+          { path: 'cadastro', component: CProdutoComponent },
+          { path: 'estoque', component: EstoqueComponent },
+        ],
+      },
+      {
+        path: 'vendas',
+        children: [
+          { path: 'relacao', component: RVendaComponent },
+        ],
+      },
     ],
   },
   {
-    path: 'fornecedores',
-    children : [
-        { path: 'cadastro', component : CFornecedorComponent, data: { title: 'Wear Out - Controle | Cadastro de Fornecedor' } },
-        { path: 'relacao', component : RFornecedorComponent, data: { title: 'Wear Out - Controle | Relação de Fornecedor' } },
+    path: 'venda/:id',
+    component: MainpageComponent,
+  },
+  {
+    path: 'user',
+    children: [
+      { path: 'perfil', component: PerfilComponent, data: { title: 'Wear Out - Controle | Perfil' } },
+      { path: 'login', component: LogginComponent, data: { title: 'Wear Out - Controle | Loggin' } },
     ],
   },
   {
-    path: 'produtos',
-    children : [
-        { path: 'cadastro', component : CProdutoComponent, data: { title: 'Wear Out - Controle | Cadastro de Produtos' } },
-        { path: 'estoque', component : EstoqueComponent, data: { title: 'Wear Out - Controle | Estoque' } },
-    ],
+    path: '',
+    redirectTo: 'user/login',
+    pathMatch: 'full'
   },
-  {
-    path: 'vendas',
-    children : [
-        { path: 'baixa', component : BaixaComponent, data: { title: 'Wear Out - Controle | Cadastro de Produtos' } },
-        { path: 'relacao', component : RVendaComponent, data: { title: 'Wear Out - Controle | Relação de Produtos' } },
-    ],
-  },
-  {
-    path: 'teste',
-    children : [
-        { path: 'table', component : TableComponent, data: { title: 'Wear Out - Controle | Cadastro de Produtos' } },
-    ],
-  },
-  { path: '',
-  redirectTo: '/home',
-  pathMatch: 'full'
-},
-{ path: '**', component: DashboardComponent }
+  { path: '**', component: MainpageComponent }
 ];
 
 @NgModule({

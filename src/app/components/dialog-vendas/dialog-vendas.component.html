@@ -1,0 +1,41 @@
+<!-- dialog-box.component.html -->
+<div class="row">
+  <h1 mat-dialog-title class="col-12">Comprador: {{data.cliente.fullName}}</h1>  
+  
+</div>
+<div class="row mb-2">
+  <h3 class="col-12">Data: {{data.DataRetorno}}</h3>
+</div>
+<div mat-dialog-content class="mt-2">
+  <h2>Detalhes do Comprador</h2>
+  <p>Email: {{data.cliente.email}}</p>
+  <p>Endereço: {{data.cliente.endereco}}</p>
+  <p>Cidade: {{data.cliente.cidade}}</p>
+  <p>Estado: {{data.cliente.estado}}</p>
+  <p>CEP: {{data.cliente.cep}}</p>
+</div>
+<div class="row col-12">
+  <table class="my-3">
+    <tr>
+      <th>Produto</th>
+      <th>codigo</th>
+      <th>Preço</th>
+      <th>Estoque</th>
+    </tr>
+
+    <tr *ngFor="let produto of data.produtos">
+      <td>{{produto.name}}</td>
+      <td>{{produto.codigo}}</td>
+      <td>{{produto.preco}}</td>
+      <td>{{produto.nomeEstoque}}</td>
+    </tr>
+  </table>
+</div>
+
+<div class="row col-12">
+  <h2>Total: {{data.total}}</h2>
+</div>
+
+<div mat-dialog-actions>
+  <button mat-button (click)="closeDialog()" mat-flat-button color="warn">Fechar</button>
+</div>

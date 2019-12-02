@@ -18,9 +18,13 @@
   </mat-form-field>
 </div>
 <div mat-dialog-actions>
-  
-  <button mat-button (click)="doAction()" mat-flat-button *ngIf="action != 'Desativar';  else false" color="primary">{{action}}</button>
-  <button mat-button (click)="doAction()" mat-flat-button *ngIf="action == 'Desativar';"  color="warn" >{{action}}</button>
-  <button mat-button (click)="closeDialog()" mat-flat-button color="warn" *ngIf="action == 'Desativar';"  color="primary">Cancel</button>
-  <button mat-button (click)="closeDialog()" mat-flat-button color="warn" *ngIf="action != 'Desativar';  else false">Cancel</button>
+
+  <button mat-button (click)="doAction()" mat-flat-button *ngIf="action != 'Desativar';  else false"
+    color="primary">{{action}}</button>
+  <button mat-button (click)="doAction()" mat-flat-button *ngIf="action == 'Desativar';"
+    color="warn">{{action}}</button>
+  <button mat-button (click)="closeDialog()" mat-flat-button color="warn" *ngIf="action == 'Desativar';"
+    color="primary">Cancel</button>
+  <button mat-button (click)="closeDialog()" mat-flat-button color="warn"
+    *ngIf="action != 'Desativar';  else false">Cancel</button>
 </div>

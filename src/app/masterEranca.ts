@@ -5,13 +5,15 @@ export class MasterEranca {
   private sistema = 'WearOut - Controle';
   public titleTela = '';
 
-
-
   nomesTela(NomeTela: string) {
+    return 'core/' + this.nomesTelaCodigo(NomeTela);
+  }
+
+  nomesTelaCodigo(NomeTela: string) {
     switch (NomeTela) {
       // Clientes
       case 'Relacao_Clientes':
-        return '/clientes/relacao';
+        return 'clientes/relacao';
       // Fornecedor
       case 'Cadastro_Fornecedor':
         return 'fornecedores/cadastro';
@@ -19,24 +21,26 @@ export class MasterEranca {
         return 'fornecedores/relacao';
       // Produtos
       case 'Cadastro_Produto':
-        return '/produtos/cadastro';
+        return 'produtos/cadastro';
       case 'Relacao_Produtos':
-        return '/produtos/relacao';
+        return 'produtos/relacao';
       case 'Estoque':
-        return '/produtos/estoque';
+        return 'produtos/estoque';
       // Vendas
       case 'Baixa':
         return 'vendas/baixa';
       case 'Relacao_Vendas':
         return 'vendas/relacao';
+      //User
+      case 'Perfil':
+        return 'user/perfil';
+      //Dashboard
+      case 'Dashboar':
+        return 'dashboard'
       //
       default:
-        return '/home';
+        return 'user/login';
     }
-  }
-
-  nomesTelaCodigo() {
-
   }
 
   GetRetornoStringData(a: Date) {

@@ -21,6 +21,10 @@ export class FornecedoresService {
     return this.call.getAllGeneric(this.service);
   }
 
+  getProdutosFornecidos(id: number) {
+    return this.call.getByIdGeneric(this.service + '/Produtos', id);
+  }
+
   getFornecedorById(id: number) {
     return this.call.getByIdGeneric(this.service, id);
   }

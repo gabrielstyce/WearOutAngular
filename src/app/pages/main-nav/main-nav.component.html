@@ -4,26 +4,18 @@
     <mat-toolbar>Menu</mat-toolbar>
     <mat-nav-list>
       <h1>
-        <button mat-button (click)="navigateMenu('d')">
+        <button mat-button (click)="navigateMenu('Dashboar')">
           <i class="material-icons  mx-2">dashboard</i> dashboard
         </button>
       </h1>
       <h1>
-        <button mat-button [matMenuTriggerFor]="aboveMenu">
+        <button mat-button (click)="navigateMenu('Relacao_Clientes')">
           <i class="material-icons  mx-2">person</i> Cliente
         </button>
-        <mat-menu class="mx-4" #aboveMenu="matMenu" yPosition="below">
-          <!-- <button mat-list-item href="#"><button mat-menu-item>Cadastrar</button></a> -->
-          <button mat-menu-item (click)="navigateMenu('Relacao_Clientes')">Relação</button>
-        </mat-menu>
       </h1>
       <h1>
-        <button mat-button [matMenuTriggerFor]="fornecedorMenu">
+        <button mat-button (click)="navigateMenu('Cadastro_Fornecedor')">
           <i class="material-icons  mx-2">group</i> Fornecedor</button>
-        <mat-menu class="mx-4" #fornecedorMenu="matMenu" yPosition="below">
-          <button mat-menu-item (click)="navigateMenu('Cadastro_Fornecedor')">Cadastrar</button>
-          <button mat-menu-item (click)="navigateMenu('Relacao_Fornecedores')">Relação</button>
-        </mat-menu>
       </h1>
       <h1>
         <button mat-button [matMenuTriggerFor]="produtosMenu">
@@ -34,12 +26,9 @@
         </mat-menu>
       </h1>
       <h1>
-        <button mat-button [matMenuTriggerFor]="vendasMenu">
-          <i class="material-icons mx-2">store</i> Vendas</button>
-        <mat-menu class="mx-4" #vendasMenu="matMenu" yPosition="below">
-          <button mat-menu-item (click)="navigateMenu('Baixa')">Baixa</button>
-          <button mat-menu-item (click)="navigateMenu('Relacao_Vendas')">Relação</button>
-        </mat-menu>
+        <button mat-button (click)="navigateMenu('Relacao_Vendas')">
+          <i class="material-icons mx-2">store</i> Vendas
+        </button>
       </h1>
     </mat-nav-list>
   </mat-sidenav>
@@ -57,7 +46,8 @@
         </button>
         <mat-menu #userMenu="matMenu" yPosition="below">
           <!-- <button mat-list-item href="#"><button mat-menu-item>Cadastrar</button></a> -->
-          <button mat-menu-item (click)="console.log('oi')">Perfil</button>
+          <button mat-menu-item (click)="navigateMenu('Perfil')">Perfil</button>
+          <button mat-menu-item (click)="logout()">Sair</button>
         </mat-menu>
       </h1>
 

@@ -1,9 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { Observable } from 'rxjs';
 import { map, shareReplay } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { MasterEranca } from '../../masterEranca';
+import { CookieService } from 'ngx-cookie-service';
 
 @Component({
   selector: 'app-main-nav',
@@ -18,10 +19,11 @@ export class MainNavComponent extends MasterEranca {
       shareReplay()
     );
 
-    public titleTela: string;
+    @Input() public titleTela: string = "";
 
   constructor(private breakpointObserver: BreakpointObserver,
-              private router: Router
+              private router: Router,
+              private cookie: CookieService,
               ) {
     super();
   }
@@ -29,9 +31,14 @@ export class MainNavComponent extends MasterEranca {
 
   // NAVIGATE & MUDANÇÂS RELACIONADAS AO MENU
   protected navigateMenu(tela: string) {
-    this.router.navigate([super.nomesTela(tela)]);
+    if (tela != 'Sair')
+      this.router.navigate([super.nomesTela(tela)]);
+    
   }
 
-
+  logout() {
+    this.cookie.deleteAll();
+    this.router.navigate(['user/login']);
+  }
 }
 
